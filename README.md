@@ -1,7 +1,7 @@
 # Домашняя работа для третьего учебного семестра (2 год обучения)
 
 ![.NET](https://github.com/eleborrr/dotnet-homeworks-2/actions/workflows/dotnet.yml/badge.svg)
-[![codecov](https://codecov.io/gh/eleborrr/dotnet-homeworks-2/branch/master/graph/badge.svg?token=71de7f3f-8ba1-4e79-9293-d5ba431c0cc2)](https://codecov.io/gh/max-arshinov/dotnet-homeworks-2)
+[![codecov](https://codecov.io/gh/eleborrr/dotnet-homeworks-2/branch/master/graph/badge.svg?token=71de7f3f-8ba1-4e79-9293-d5ba431c0cc2)](https://codecov.io/gh/eleborrr/dotnet-homeworks-2)
 
 ## Как устроены Actions
 1. ***build***: *Проверка: собирается ли проект.*
