@@ -38,4 +38,3 @@ public static class Parser
         else return CalculatorOperation.Undefined;
     }
 }
-
