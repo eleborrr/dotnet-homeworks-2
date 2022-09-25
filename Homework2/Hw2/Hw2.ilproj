@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.IL">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <RootNamespace>Hw2</RootNamespace>
+        <MicrosoftNetCoreIlasmPackageVersion>6.0.0</MicrosoftNetCoreIlasmPackageVersion>
+        <ProduceReferenceAssembly>..\Hw2\obj\Debug\net6.0\</ProduceReferenceAssembly>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Homework1\Hw1.Tests\Hw1.Tests.csproj" />
+      <ProjectReference Include="..\..\Homework1\Hw1\Hw1.csproj" />
+    </ItemGroup>
+    
+    
+    
+</Project>
