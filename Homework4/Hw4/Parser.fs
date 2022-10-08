@@ -12,7 +12,7 @@ type CalcOptions = {
 }
 
 let isArgLengthSupported (args : string[]) =
-    args.Length <> 3
+    args.Length = 3
 
 let parseArg (value: string) =
     match Double.TryParse(value) with
