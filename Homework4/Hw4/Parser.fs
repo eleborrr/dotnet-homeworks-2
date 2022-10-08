@@ -38,7 +38,7 @@ let parseCalcArguments(args : string[]) =
     let _operation = parseOperation args[1]
     
     if _operation = CalculatorOperation.Undefined
-        then raise (InvalidOperationException "Wrong operation")
+        then raise (ArgumentException "Wrong operation")
     
     {arg1 = a1; operation = _operation; arg2 = a2}
    
