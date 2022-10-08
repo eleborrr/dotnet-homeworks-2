@@ -27,5 +27,5 @@ let calculate (value1 : float) (operation : CalculatorOperation) (value2 : float
     | CalculatorOperation.Minus -> Minus value1 value2
     | CalculatorOperation.Multiply -> Multiply value1 value2
     | CalculatorOperation.Divide -> Divide value1 value2
-    | CalculatorOperation.Undefined | _ -> raise (ArgumentOutOfRangeException "Wrong operator")
+    | CalculatorOperation.Undefined | _ -> raise (ArgumentOutOfRangeException "Unknown operation")
     

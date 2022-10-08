@@ -17,7 +17,7 @@ let isArgLengthSupported (args : string[]) =
 let parseArg (value: string) =
     match Double.TryParse(value) with
     | true,arg -> arg
-    | _ -> raise (ArgumentException "Number is not double")
+    | _ -> raise (ArgumentException "Wrong argument")
 
 let parseOperation (arg : string) =
     match arg with
@@ -35,10 +35,10 @@ let parseCalcArguments(args : string[]) =
     
     let a1 = parseArg args[0]
     let a2 = parseArg args[2]
-    let _operation = parseOperation args[1]
+    let calculation = parseOperation args[1]
     
-    if _operation = CalculatorOperation.Undefined
+    if calculation = CalculatorOperation.Undefined
         then raise (ArgumentException "Wrong operation")
     
-    {arg1 = a1; operation = _operation; arg2 = a2}
+    {arg1 = a1; operation = calculation; arg2 = a2}
    
