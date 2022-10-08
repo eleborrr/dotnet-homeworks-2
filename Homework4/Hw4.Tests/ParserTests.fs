@@ -15,7 +15,9 @@ let ``+, -, *, / parsed correctly`` (operation, operationExpected) =
     let args = [|"15";operation;"5"|]
    
     //act
+    let a = parseCalcArguments args
     let options = parseCalcArguments args
+    
     
     //assert
     Assert.Equal(15.0, options.arg1)
