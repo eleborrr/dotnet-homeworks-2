@@ -9,23 +9,23 @@ type CalculatorOperation =
      | Divide = 3
      | Undefined = 4
      
-let Plus x y =
+let plus x y =
     x + y
     
-let Minus x y =
+let minus x y =
     x - y
     
-let Divide x y =
+let divide x y =
     x / y
     
-let Multiply x y =
+let multiply x y =
     x * y
      
 let calculate (value1 : float) (operation : CalculatorOperation) (value2 : float) =
     match operation with 
-    | CalculatorOperation.Plus -> Plus value1 value2
-    | CalculatorOperation.Minus -> Minus value1 value2
-    | CalculatorOperation.Multiply -> Multiply value1 value2
-    | CalculatorOperation.Divide -> Divide value1 value2
-    | CalculatorOperation.Undefined | _ -> raise (ArgumentOutOfRangeException "Unknown operation")
+    | CalculatorOperation.Plus -> plus value1 value2
+    | CalculatorOperation.Minus -> minus value1 value2
+    | CalculatorOperation.Multiply -> multiply value1 value2
+    | CalculatorOperation.Divide -> divide value1 value2
+    | CalculatorOperation.Undefined | _ -> raise (ArgumentOutOfRangeException $"Expected \"+\" \"-\" \"\\\" \"*\" but was {operation} ")
     
