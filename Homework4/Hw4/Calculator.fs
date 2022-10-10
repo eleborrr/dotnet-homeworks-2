@@ -27,5 +27,5 @@ let calculate (value1 : float) (operation : CalculatorOperation) (value2 : float
     | CalculatorOperation.Minus -> minus value1 value2
     | CalculatorOperation.Multiply -> multiply value1 value2
     | CalculatorOperation.Divide -> divide value1 value2
-    | CalculatorOperation.Undefined | _ -> raise (ArgumentOutOfRangeException $"Expected \"+\" \"-\" \"\\\" \"*\" but was {operation} ")
+    | _ -> raise (ArgumentOutOfRangeException $"Expected {CalculatorOperation.Plus} {CalculatorOperation.Minus} {CalculatorOperation.Multiply} {CalculatorOperation.Divide} but was \"{operation}\"")
     

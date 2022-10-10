@@ -4,11 +4,7 @@ open Hw4.Parser
 
 [<EntryPoint>]
 let Main args =
-    let work = true
-    let input = [|" "|]
-    while input[0] <> "exit" do
-        let input = Console.ReadLine().Split()
-        let parseArgs = parseCalcArguments input
-        let res = calculate parseArgs.arg1 parseArgs.operation parseArgs.arg2
-        printfn $"{res}"
+    let parsedArgs = parseCalcArguments args
+    let res = calculate parsedArgs.arg1 parsedArgs.operation parsedArgs.arg2
+    printfn $"{res}"
     0
