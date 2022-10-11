@@ -25,7 +25,7 @@ let parseOperation (arg : string) =
     | "-" -> CalculatorOperation.Minus
     | "*" -> CalculatorOperation.Multiply
     | "/" -> CalculatorOperation.Divide
-    | _ -> raise (ArgumentOutOfRangeException $"Expected \"+\" \"-\" \"\\\" \"*\" but was \"{arg}\"")
+    | _ -> raise (ArgumentException $"Expected \"+\" \"-\" \"\\\" \"*\" but was \"{arg}\"")
     
 
     
