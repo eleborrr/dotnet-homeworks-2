@@ -16,8 +16,8 @@ let isArgLengthSupported (args : string[]) =
 
 let parseArg (value: string) =
     match Double.TryParse(value) with
-    | true,arg -> arg
-    | _ -> raise (ArgumentException $"Expected a number but was \"{value}\"")
+    | true, arg -> arg
+    | _ -> raise (ArgumentException $"Couldn't parse a \"{value}\" to number ")
 
 let parseOperation (arg : string) =
     match arg with
@@ -25,7 +25,7 @@ let parseOperation (arg : string) =
     | "-" -> CalculatorOperation.Minus
     | "*" -> CalculatorOperation.Multiply
     | "/" -> CalculatorOperation.Divide
-    | _ -> raise (ArgumentException $"Expected {CalculatorOperation.Plus} {CalculatorOperation.Minus} {CalculatorOperation.Multiply} {CalculatorOperation.Divide} but was \"{arg}\"")
+    | _ -> raise (ArgumentException $"Expected {CalculatorOperation} but was \"{arg}\"")
     
 
     
