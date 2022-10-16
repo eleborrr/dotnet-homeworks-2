@@ -9,4 +9,5 @@ type MaybeBuilder() =
         | Ok x -> f x
     member builder.Return x: Result<'a,'b> =
         Ok x
+
 let maybe = MaybeBuilder()
