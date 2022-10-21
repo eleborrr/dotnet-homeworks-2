@@ -16,7 +16,9 @@ let calculateRequest args=
     match args with
             | Ok res -> Ok $"{calculate res}"
             | Error DivideByZero -> Ok "DivideByZero"
-            | Error error -> Error error
+            | Error (WrongArgFormat arg) | Error (WrongArgFormatOperation arg) -> Error $"Could not parse value '{arg}'"
+            | Error (WrongArgLength arg) -> Error $"Invalid amount of data : expected 3 arguments, but were given {arg}"
+            | _ -> Error "Unhandled Error"
 
 let calculatorHandler: HttpHandler =
     fun next ctx ->
@@ -25,6 +27,8 @@ let calculatorHandler: HttpHandler =
         let operation = (ctx.TryGetQueryStringValue "operation").Value
         let val2 = (ctx.TryGetQueryStringValue "value2").Value
         let args = parseCalcArguments [|val1; operation; val2|]
+        // let args = [|val1; operation; val2|]
+
         
         let result: Result<string, string> = calculateRequest args
 
