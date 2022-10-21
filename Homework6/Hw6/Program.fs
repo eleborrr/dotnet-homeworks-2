@@ -8,18 +8,35 @@ open Microsoft.Extensions.Logging
 open Microsoft.Extensions.DependencyInjection
 open Giraffe
 
+open Parser
+open Calculator
+
+        
+let calculateRequest args=
+    match args with
+            | Ok res -> Ok $"{calculate res}"
+            | Error DivideByZero -> Ok "DivideByZero"
+            | Error error -> Error error
+
 let calculatorHandler: HttpHandler =
     fun next ctx ->
-        let result: Result<string, string> = raise(NotImplementedException())
+        
+        let val1 = (ctx.TryGetQueryStringValue "value1").Value
+        let operation = (ctx.TryGetQueryStringValue "operation").Value
+        let val2 = (ctx.TryGetQueryStringValue "value2").Value
+        let args = parseCalcArguments [|val1; operation; val2|]
+        
+        let result: Result<string, string> = calculateRequest args
 
         match result with
-        | Ok ok -> (setStatusCode 200 >=> text (ok.ToString())) next ctx
-        | Error error -> (setStatusCode 400 >=> text error) next ctx
+            | Ok ok -> (setStatusCode 200 >=> text (ok.ToString())) next ctx
+            | Error error -> (setStatusCode 400 >=> text error) next ctx
 
 let webApp =
     choose [
         GET >=> choose [
-             route "/" >=> text "Use //calculate?value1=<VAL1>&operation=<OPERATION>&value2=<VAL2>"
+             route "/" >=> text "Use /calculate?value1=<VAL1>&operation=<OPERATION>&value2=<VAL2>"
+             route "/calculate" >=> calculatorHandler
         ]
         setStatusCode 404 >=> text "Not Found" 
     ]
