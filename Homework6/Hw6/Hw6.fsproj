@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <AssemblyName>Hw6.App</AssemblyName>
-        <EnableDefaultContentItems>false</EnableDefaultContentItems>
+        <EnableDefaultContentItems>true</EnableDefaultContentItems>
         <RootNamespace>Hw6</RootNamespace>
     </PropertyGroup>
 
@@ -23,6 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Content Include="Hw6.Client\Hw6.Client.fsproj" />
         <None Include="web.config" CopyToOutputDirectory="PreserveNewest" />
         <Content Include="WebRoot\**\*">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

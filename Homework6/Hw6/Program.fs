@@ -1,6 +1,7 @@
 module Hw6.App
 
 open System
+open System.Net
 open Microsoft.AspNetCore.Hosting
 open Microsoft.AspNetCore.Builder
 open Microsoft.Extensions.Hosting
@@ -51,7 +52,7 @@ type Startup() =
 
     member _.Configure (app : IApplicationBuilder) (_ : IHostEnvironment) (_ : ILoggerFactory) =
         app.UseGiraffe webApp
-        
+            
 [<EntryPoint>]
 let main _ =
     Host
