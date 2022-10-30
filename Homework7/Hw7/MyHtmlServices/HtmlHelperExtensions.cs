@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using System.Text;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -19,8 +20,8 @@ public static class HtmlHelperExtensions
             builder.AppendHtmlLine("<div>");
             var display = GetDisplay(prop);
             var attr = GetAttr(prop, model);
-            builder.AppendHtmlLine($"<label for=\"{prop.Name}\">{display}</label><br>");
-            builder.AppendHtmlLine($"<span asp-validation-for\"{prop.Name}\">{attr}</span>");
+            builder.AppendHtmlLine($"<label for=\"{prop.Name}\">{display}</label><br> " +
+                                   $"<span asp-validation-for\"{prop.Name}\">{attr}</span>");
             builder.AppendHtmlLine(GetInput(prop, model));
 
             builder.AppendHtmlLine("</div>");
@@ -45,22 +46,23 @@ public static class HtmlHelperExtensions
     
     private static string GetInput(PropertyInfo prop, object? model)
     {
+        var builder = new StringBuilder();
         var type = prop.PropertyType;
         if (!type.IsEnum)
         {
-            var contentType = type == typeof(int) ? "number" : "text";
+            var contentType = type == typeof(string) ? "text" : "number";
             return $"<input id=\"{prop.Name}\" name=\"{prop.Name}\" type=\"{contentType}\"></input><br>";
         }
         else
         {
             var modelValue = model == null ? "" : prop.GetValue(model);
             var enumValues = type.GetEnumValues();
-            var result = $"<select id=\"{prop.Name}\" name=\"{prop.Name}\" value=\"{modelValue}\">";
+            builder.Append($"<select id=\"{prop.Name}\" name=\"{prop.Name}\" value=\"{modelValue}\">");
             foreach (var enumValue in enumValues)
             {
-                result = $"{result}<br><option>{enumValue}</option>";
+                builder.Append($"<br><option>{enumValue}</option>");
             }
-            return result;
+            return builder.ToString();
         }
     }
     
