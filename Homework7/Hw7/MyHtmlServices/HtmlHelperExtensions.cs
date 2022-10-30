@@ -62,6 +62,8 @@ public static class HtmlHelperExtensions
             {
                 builder.Append($"<br><option>{enumValue}</option>");
             }
+
+            builder.Append("</select");
             return builder.ToString();
         }
     }
