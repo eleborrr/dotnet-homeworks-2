@@ -16,8 +16,11 @@ public class CalculatorController : Controller
         try
         {
             var parsedData = Parser.ParseCalcArguments(val1, operation, val2);
+            var Val1 = parsedData.Item1;
+            var operationParsed = parsedData.Item2;
+            var Val2 = parsedData.Item3;
 
-            result = calculator.Calculate(parsedData.Item1, parsedData.Item2, parsedData.Item3);
+            result = calculator.Calculate(Val1, operationParsed, Val2);
 
             return Ok(result);
         }

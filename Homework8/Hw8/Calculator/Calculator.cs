@@ -1,9 +1,8 @@
 ﻿using System.Diagnostics;
-using Hw8.Calculator;
 
-namespace Hw8;
+namespace Hw8.Calculator;
 
-public class CalculatorClass: ICalculator
+public class Calculator: ICalculator
 {
     public double Plus(double val1, double val2) => val1 + val2;
 
