@@ -8,19 +8,16 @@ namespace Hw8.Controllers;
 public class CalculatorController : Controller
 {
     public ActionResult<double> Calculate([FromServices] ICalculator calculator,
-        string val1,
-        string operation,
-        string val2)
+        string val1Parameter,
+        string operationParameter,
+        string val2Parameter)
     {
         var result = 0.0;
         try
         {
-            var parsedData = Parser.ParseCalcArguments(val1, operation, val2);
-            var Val1 = parsedData.Item1;
-            var operationParsed = parsedData.Item2;
-            var Val2 = parsedData.Item3;
-
-            result = calculator.Calculate(Val1, operationParsed, Val2);
+            var (val1, operation, val2) =
+                Parser.ParseCalcArguments(val1Parameter, operationParameter, val2Parameter);
+            result = calculator.Calculate(val1, operation, val2);
 
             return Ok(result);
         }
