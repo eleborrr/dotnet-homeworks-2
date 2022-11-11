@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Hw9;
 using Hw9.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,3 +33,15 @@ namespace Hw9
     [ExcludeFromCodeCoverage]
     public partial class Program { }
 }
+
+// var shuntingYard = new ShuntingYard();
+// var res = shuntingYard.Parse("(5 * 4 + 3 * 2) - 1");
+// foreach(var elem in res)
+//     Console.Write(elem.ToString());
+//
+// Console.WriteLine();
+//
+// var res2= Parser.Parse("(5 * 4 + 3 * 2) - 1");
+// var visitor = new Visitor();
+// visitor.Visit(res2);
+// Console.WriteLine(res2);
