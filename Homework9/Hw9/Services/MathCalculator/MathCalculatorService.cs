@@ -9,7 +9,6 @@ public class MathCalculatorService : IMathCalculatorService
     
     public async Task<CalculationMathExpressionResultDto> CalculateMathExpressionAsync(string? expression)
     {
-        var visitor = new Visitor();
         try
         {
             var expressionTree = await Task.Run(()=>Parser.Parse(expression));

@@ -37,7 +37,6 @@ public static class Parser
             "/" => Expression.Divide(num1, num2),
             "*" => Expression.Multiply(num1, num2),
             _ => throw new ArgumentException()
-
         };
     }
     

@@ -13,10 +13,8 @@ public class Visitor : ExpressionVisitor
         Nodes[node] = new Lazy<Task<double>>(async () =>
         {
             await Task.WhenAll(Nodes[node.Left].Value, Nodes[node.Right].Value);
-            await Task.Yield();
-            await Task.Delay(1000);
 
-            return GetExpressionResult(node, await Nodes[node.Left].Value, await Nodes[node.Right].Value);
+            return GetExpressionResult(node, Nodes[node.Left].Value.Result, Nodes[node.Right].Value.Result);
         });
         return base.VisitBinary(node);
     }
