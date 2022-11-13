@@ -1,78 +1,42 @@
-﻿using System.Linq.Expressions;
-using System.Reflection.Metadata;
-using Hw9.ErrorMessages;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 
 namespace Hw9;
 
-public class Visitor: ExpressionVisitor
+[ExcludeFromCodeCoverage]
+public class Visitor : ExpressionVisitor
 {
-    public double Start(Expression node)
-    {
-        Thread.Sleep(1000);
-        Visit(node);
-        if (node.NodeType == ExpressionType.Constant)
-            return (double)((ConstantExpression)node).Value;
-        var nodeBinary = (BinaryExpression)node;
-        var val1 = Task.Run(() => Visit(nodeBinary.Left));
-        var val2 = Task.Run(() => Visit(nodeBinary.Right));
-        // var val1 = Task.Run(() => Expression.Lambda<Func<double>>(nodeBinary.Left).Compile().Invoke());
-        // var val2 = Task.Run(() => Expression.Lambda<Func<double>>(nodeBinary.Right).Compile().Invoke());
-        Task.WhenAll(val1, val2);
-        //return GetExpression(node, val1.Result, val2.Result);
-        return 2;
-    }
+    private static readonly Dictionary<Expression, Lazy<Task<double>>> Nodes = new();
 
     protected override Expression VisitBinary(BinaryExpression node)
     {
-        Visit(node.Left);
-        // var val1 = Task.Run(() => Expression.Lambda<Func<double>>(node.Left).Compile().Invoke());
-        // var val2 = Task.Run(() => Expression.Lambda<Func<double>>(node.Right).Compile().Invoke());
-        Visit(node.Right);
-        // Task.WhenAll(val1, val2);
-        return node;
-        // return GetExpression(node, val1.Result, val2.Result);
-    }
+        Nodes[node] = new Lazy<Task<double>>(async () =>
+        {
+            await Task.WhenAll(Nodes[node.Left].Value, Nodes[node.Right].Value);
+            await Task.Yield();
+            await Task.Delay(1000);
 
-    protected override Expression VisitUnary(UnaryExpression node)
-    {
-        Visit(node);
-        return node;
+            return GetExpressionResult(node, await Nodes[node.Left].Value, await Nodes[node.Right].Value);
+        });
+        return base.VisitBinary(node);
     }
 
     protected override Expression VisitConstant(ConstantExpression node)
     {
-        return node;
-    }
-    
-    private static Expression GetExpression(Expression expression, double left, double right)
-    {
-        Thread.Sleep(1000);
-        return expression.NodeType switch
-        {
-            ExpressionType.Add => Expression.Constant(left + right),
-            ExpressionType.Subtract => Expression.Constant(left - right),
-            ExpressionType.Multiply => Expression.Constant(left * right),
-            ExpressionType.Divide =>
-                right != 0.0 
-                    ? Expression.Constant(left / right) 
-                    : throw new DivideByZeroException(MathErrorMessager.DivisionByZero),
-            ExpressionType.Constant => ((ConstantExpression)expression)
-        };
+        Nodes[node] = new Lazy<Task<double>>(async () => (double)node.Value);
+        return base.VisitConstant(node);
     }
 
-    private static double Calculate(Expression expression, double left, double right)
+    private double GetExpressionResult(BinaryExpression node, double val1, double val2) => node.NodeType switch
     {
-        return expression.NodeType switch
-        {
-            ExpressionType.Add => left + right,
-            ExpressionType.Subtract => left + right,
-            ExpressionType.Multiply => left * right,
-            ExpressionType.Divide =>
-                right != 0.0 
-                    ? left / right 
-                    : throw new DivideByZeroException(MathErrorMessager.DivisionByZero),
-            ExpressionType.Constant => (double)((ConstantExpression)expression).Value
-        };
-    }
-    
+        ExpressionType.Add => val1 + val2,
+        ExpressionType.Subtract => val1 - val2,
+        ExpressionType.Multiply => val1 * val2,
+        ExpressionType.Divide => val2 == 0
+            ? throw new Exception(ErrorMessages.MathErrorMessager.DivisionByZero)
+            : val1 / val2,
+        _ => throw new Exception(ErrorMessages.MathErrorMessager.UnknownCharacter)
+    };
+
+  
 }

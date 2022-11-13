@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Hw9.ErrorMessages;
 using Microsoft.AspNetCore.Identity;
 
 namespace Hw9;
@@ -22,9 +23,12 @@ public class ShuntingYard
         {
             if (IsNumber(symb))
                 order.Enqueue(new QueueData(double.Parse(symb)));
-            if (IsOperator(symb))
+            else if (IsOperator(symb))
                 CheckOperationsOrder(symb);
+            else
+                throw new Exception(MathErrorMessager.UnknownCharacterMessage('a'));
         }
+
         while (operations.Count > 0)
             order.Enqueue(new QueueData(operations.Pop()));
         return order;
@@ -51,13 +55,6 @@ public class ShuntingYard
                         order.Enqueue(new QueueData(stackOperator));
                 } while (stackOperator is "*" or "/" && operations.Count > 0);
 
-                // {
-                //     var a = stackOperator is "*" or "/";
-                //     var b = operations.Count > 0;
-                //     stackOperator = operations.Pop();
-                //     order.Enqueue(new QueueData(stackOperator));
-                // }
-                
                 if(stackOperator == "(")
                     operations.Push(stackOperator);
 

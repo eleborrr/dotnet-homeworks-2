@@ -10,12 +10,13 @@ public class MathCalculatorService : IMathCalculatorService
     public async Task<CalculationMathExpressionResultDto> CalculateMathExpressionAsync(string? expression)
     {
         var visitor = new Visitor();
-        var expr = await Task.Run(()=>Parser.Parse(expression));
+        var expressionTree = await Task.Run(()=>Parser.Parse(expression));
         try
         {
-            var result = visitor.Visit(expr);
-            var r = Expression.Lambda<Func<double>>(result).Compile().Invoke();
-            return new CalculationMathExpressionResultDto(r);
+            //var taskExpression = await Task.Run(() => visitor.Visit(expressionTree));
+            var listExpression = new ListExpression(expressionTree);
+            var result = await MathExpressionVisitor.VisitAsync(listExpression.Expressions);
+            return new CalculationMathExpressionResultDto(result);
         }
         catch (DivideByZeroException ex)
         {

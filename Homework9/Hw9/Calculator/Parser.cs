@@ -13,7 +13,7 @@ public static class Parser
         while (parsedInput.Count > 0)
         {
             var elem = parsedInput.Dequeue();
-            if (!elem.IsNumber)
+            if (!elem.IsNumber && stack.Count >= 2)
             {
                 var right = stack.Pop();
                 var left = stack.Pop();
