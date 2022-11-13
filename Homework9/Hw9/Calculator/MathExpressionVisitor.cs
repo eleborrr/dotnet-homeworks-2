@@ -18,7 +18,7 @@ public static class MathExpressionVisitor
                 {
                     await Task.WhenAll(nodes[binaryExpression.Left].Value, nodes[binaryExpression.Right].Value);
                     await Task.Yield();
-                    await Task.Delay(1000);
+                    //await Task.Delay(1000);
                     return GetExpressionResult(binaryExpression, await nodes[binaryExpression.Left].Value,
                         await nodes[binaryExpression.Right].Value);
                 }

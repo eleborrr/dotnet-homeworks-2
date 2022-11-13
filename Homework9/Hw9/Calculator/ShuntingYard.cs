@@ -19,6 +19,7 @@ public class ShuntingYard
 
     public Queue<QueueData> Parse(string input)
     {
+        IsEmptyCheck(input);
         foreach (var symb in TransformInput(input))
         {
             if (IsNumber(symb))
@@ -65,7 +66,7 @@ public class ShuntingYard
         else if (inpt is ")")
         {
             var operation = operations.Pop();
-            while (operations.Count > 0 && operation != "(") //  && operation != "("
+            while (operations.Count > 0 && operation != "(")
             {
                 order.Enqueue(new QueueData(operation));
                 operation = operations.Pop();
@@ -76,11 +77,18 @@ public class ShuntingYard
 
     }
 
-    public static bool IsNumber(string inpt)
+    private void IsEmptyCheck(string input)
+    {
+        if (input is "" or null)
+            throw new Exception(MathErrorMessager.EmptyString);
+    }
+    
+    
+    private static bool IsNumber(string input)
     {
         double number;
-        return Double.TryParse(inpt, out number);
+        return Double.TryParse(input, out number);
     }
 
-    public static bool IsOperator(string inpt) => operators.Contains(inpt);
+    private static bool IsOperator(string inpt) => operators.Contains(inpt);
 }
