@@ -14,7 +14,7 @@ public class Visitor : ExpressionVisitor
         {
             await Task.WhenAll(Nodes[node.Left].Value, Nodes[node.Right].Value);
             await Task.Yield();
-            //await Task.Delay(1000);
+            await Task.Delay(1000);
 
             return GetExpressionResult(node, await Nodes[node.Left].Value, await Nodes[node.Right].Value);
         });

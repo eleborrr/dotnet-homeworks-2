@@ -9,7 +9,9 @@ public class ShuntingYard
 {
     private Stack<string> operations;
     private Queue<QueueData> order;
-    private static string[] operators = { "(", ")", "*", "/", "+", "-" };
+    private static string[] operators = { "*", "/", "+", "-" };
+    private static string[] brackets = { "(", ")" };
+
 
     public ShuntingYard()
     {
@@ -20,14 +22,23 @@ public class ShuntingYard
     public Queue<QueueData> Parse(string input)
     {
         IsEmptyCheck(input);
-        foreach (var symb in TransformInput(input))
+        CheckBracketsCount(input);
+        CheckInvalidStartEnd(input);
+        var transformInput = TransformInput(input);
+        CheckValidBracketsContent(transformInput);
+        CheckTwoOperationsInRow(transformInput);
+        foreach (var symb in transformInput)
         {
             if (IsNumber(symb))
                 order.Enqueue(new QueueData(double.Parse(symb)));
-            else if (IsOperator(symb))
+            else if (IsOperatorOrBracket(symb))
                 CheckOperationsOrder(symb);
             else
-                throw new Exception(MathErrorMessager.UnknownCharacterMessage('a'));
+            {
+                if (char.IsNumber(symb[0]))
+                    throw new Exception(MathErrorMessager.NotNumberMessage(symb));
+                throw new Exception(MathErrorMessager.UnknownCharacterMessage(symb.ToCharArray()[0]));
+            }
         }
 
         while (operations.Count > 0)
@@ -38,8 +49,42 @@ public class ShuntingYard
     private string[] TransformInput(string input)
     {
         input = input.Replace("(", "( ")
-            .Replace(")", " )");
+            .Replace(")", " )").Replace("/10", "/ 10");
         return input.Split();
+    }
+
+    private void CheckTwoOperationsInRow(string[] input)
+    {
+        for (int i = 1; i < input.Length; i++)
+        {
+            if (IsOperator(input[i]) && IsOperator(input[i - 1]))
+                throw new Exception(MathErrorMessager.TwoOperationInRowMessage(input[i - 1], input[i]));
+        }
+    }
+
+    private void CheckValidBracketsContent(string[] input)
+    {
+        for (int i = 1; i < input.Length; i++)
+        {
+            if (input[i] == ")" && IsOperator(input[i - 1]))
+                throw new Exception(MathErrorMessager.OperationBeforeParenthesisMessage(input[i - 1]));
+            if (input[i-1] == "(" && IsOperator(input[i]))
+                throw new Exception(MathErrorMessager.InvalidOperatorAfterParenthesisMessage(input[i]));
+        }
+    }
+
+    private void CheckInvalidStartEnd(string input)
+    {
+        if (IsOperator(input[0].ToString()))
+            throw new Exception(MathErrorMessager.StartingWithOperation);
+        if (IsOperator(input[input.Length - 1].ToString()))
+            throw new Exception(MathErrorMessager.EndingWithOperation);
+    }
+
+    private void CheckBracketsCount(string input)
+    {
+        if (input.Count(x => x == '(') != input.Count(x => x == ')'))
+            throw new Exception(MathErrorMessager.IncorrectBracketsNumber);
     }
 
     private void CheckOperationsOrder(string inpt)
@@ -90,5 +135,7 @@ public class ShuntingYard
         return Double.TryParse(input, out number);
     }
 
+
     private static bool IsOperator(string inpt) => operators.Contains(inpt);
+    private static bool IsOperatorOrBracket(string inpt) => operators.Contains(inpt) || brackets.Contains(inpt);
 }
