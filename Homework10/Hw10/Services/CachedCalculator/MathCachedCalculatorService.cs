@@ -1,37 +1,35 @@
 ﻿using Hw10.DbModels;
 using Hw10.Dto;
 using Hw10.Services.MathCalculator;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Hw10.Services.CachedCalculator;
 
 public class MathCachedCalculatorService : IMathCalculatorService
 {
-	private readonly ApplicationContext _dbContext;
+	private readonly IMemoryCache _memoryCache;
 	private readonly IMathCalculatorService _simpleCalculator;
 
-	public MathCachedCalculatorService(ApplicationContext dbContext, IMathCalculatorService simpleCalculator)
+	public MathCachedCalculatorService(IMemoryCache memoryCache ,IMathCalculatorService simpleCalculator)
 	{
-		_dbContext = dbContext;
+		_memoryCache = memoryCache;
 		_simpleCalculator = simpleCalculator;
 	}
 
 	public async Task<CalculationMathExpressionResultDto> CalculateMathExpressionAsync(string? expression)
 	{
-		var result = _dbContext.SolvingExpressions.FirstOrDefault(exp => exp.Expression == expression);
-		if (result != null) return new CalculationMathExpressionResultDto(result.Result);
+		if (expression is null)
+			return await _simpleCalculator.CalculateMathExpressionAsync(expression);
 		
-		var expr = new SolvingExpression();
-		expr.Expression = expression;
-		var calculated = await _simpleCalculator.CalculateMathExpressionAsync(expression);
-		expr.Result = calculated.Result;
-
-		if (calculated.IsSuccess)
+		if (_memoryCache.TryGetValue(expression, out double result))
+			return new CalculationMathExpressionResultDto(result);
+		
+		var calculate = await _simpleCalculator.CalculateMathExpressionAsync(expression);
+		
+		if (calculate.IsSuccess)
 		{
-			_dbContext.SolvingExpressions.Add(expr);
-			await _dbContext.SaveChangesAsync();
+			_memoryCache.Set(expression, calculate.Result);
 		}
-
-		return calculated;
-
+		return calculate;
 	}
 }
